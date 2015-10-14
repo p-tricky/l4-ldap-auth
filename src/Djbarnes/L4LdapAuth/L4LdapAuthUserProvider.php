@@ -37,7 +37,11 @@ class L4LdapAuthUserProvider implements UserProviderInterface
       //$connectionString = $this->ldapserver;
       //$connection = ldap_connect($connectionString[0]);
       $connection = ldap_connect($this->ldapserver);
-      $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
+      $adminBind = false;
+      if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
+        if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
+          if(ldap_start_tls($connection))
+            $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
       if(!$adminBind)
         return false;
         // return null; //server down or admin account unavailable
@@ -63,7 +67,11 @@ class L4LdapAuthUserProvider implements UserProviderInterface
     public function retrieveByCredentials(array $credentials)
     {
       $connection = ldap_connect($this->ldapserver);
-      $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
+      $adminBind = false;
+      if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
+        if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
+          if(ldap_start_tls($connection))
+            $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
       if(!$adminBind)
         return false; //server down or admin account unavailable
 
@@ -93,9 +101,12 @@ class L4LdapAuthUserProvider implements UserProviderInterface
       if($credentials['password'] == '')
         return false;
       $connection = ldap_connect($this->ldapserver);
-      //$result = array();
-        if(!$result = @ldap_bind($connection,$user->id,$credentials['password']))
-          return false;
+      $result = false;
+      if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
+        if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
+          if(ldap_start_tls($connection))
+            if(!$result = @ldap_bind($connection,$user->id,$credentials['password']))
+              return false;
       ldap_close($connection);
       return true;
     }
