@@ -40,7 +40,7 @@ class L4LdapAuthUserProvider implements UserProviderInterface
       $adminBind = false;
       if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
         if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
-          if(ldap_start_tls($connection))
+          //if(ldap_start_tls($connection))
             $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
       if(!$adminBind)
         return false;
@@ -70,7 +70,7 @@ class L4LdapAuthUserProvider implements UserProviderInterface
       $adminBind = false;
       if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
         if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
-          if(ldap_start_tls($connection))
+          //if(ldap_start_tls($connection))
             $adminBind = ldap_bind($connection, $this->ldapadmindn, $this->ldapadminpw);
       if(!$adminBind)
         return false; //server down or admin account unavailable
@@ -104,7 +104,7 @@ class L4LdapAuthUserProvider implements UserProviderInterface
       $result = false;
       if (ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3))
         if (ldap_set_option($connection, LDAP_OPT_REFERRALS, 0))
-          if(ldap_start_tls($connection))
+          //if(ldap_start_tls($connection))
             if(!$result = @ldap_bind($connection,$user->id,$credentials['password']))
               return false;
       ldap_close($connection);
